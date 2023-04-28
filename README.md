@@ -38,7 +38,7 @@ import delegationTx from "@dotare/cardano-transactions"
 
 <button onClick={() => { delegationTx('5653f2a1aea5318f43a63e0148076348a475d3c89283a8c1eb498fb7', 'eternl', 0) }}>eternl</button>
 ```
-Every transaction may have it's own unique parameters to customize the user experience as well as selecting the on-chain network and light wallet.
+##### Every transaction may have it's own unique parameters to customize the user experience as well as selecting the on-chain network and light wallet.
 *Be sure to look at the parameters in the [Transaction List](#txlist)*
 
 ---
@@ -50,15 +50,15 @@ Every transaction may have it's own unique parameters to customize the user expe
 
 ---
 <a name="txlist"><h4>Transaction List</h4></a>
-Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
---- | --- | --- | --- |--- |--- |--- |--- 
-delegationTx | Pool ID: string, WalletName: string, NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts <br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0%
+|Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
+| --- | --- | --- | --- | --- | --- | --- |
+|delegationTx | Pool ID: string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
 
 ---
 **Ways to support:**
 
 *Post Issues:*
-https://github.com/dotareio/cardano-delegation/issues/new/choose
+https://github.com/dotareio/cardano-transactions/issues/new/choose
 *Templates:* Question, Bug, Feature Request, Security Vuln
 
 *Delegate:*
