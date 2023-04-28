@@ -3,9 +3,9 @@
 </p>
 
 ##### Table of Contents
-[Setup](#setup)
-[How to use](#howtouse)
-[How to contribute](#howtoadd)
+[Setup](#setup)<br/>
+[How to use](#howtouse)<br/>
+[How to contribute](#howtoadd)<br/>
 [Transaction List](#txlist)
 
 ---
