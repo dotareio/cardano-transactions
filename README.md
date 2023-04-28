@@ -1,4 +1,4 @@
-<h4 align="center">An open source library for developers to utilize CIP-30 & dcSparks browser serialization to create reusable transactions on the Cardano Blockchain.</h4>
+<h4 align="center">An open source library for developers to utilize CIP-30 & dcSpark's browser serialization to create reusable transactions on the Cardano Blockchain.</h4>
 <p align="center"><a href="https://blockfrost.io/"><img src="https://github.com/dotareio/public/blob/main/blockfrost.svg" width="110"></a><img src="https://img.shields.io/badge/Preview-Up-brightgreen"> <img src="https://img.shields.io/badge/Pre--Production-Up-brightgreen"> <img src="https://img.shields.io/badge/Mainnet-Up-brightgreen">
 </p>
 
@@ -44,16 +44,16 @@ import { delegationTx } from "@dotare/cardano-transactions"
 ---
 <a name="howtoadd"><h4>How to contribute</h4><a>
 ###### *Pull Requests:* 
-###### - Add new transactions to the repo in our `./src/transactions/` directory.
-###### - Add new utility to the repo in our `./src/utils/` directory.
-###### - Update our ```README``` with your transaction and link to the dependent library if you did not add it to the `./src/transactions/`.
+###### - Add new transactions to the repo in the `./src/transactions/` directory.
+###### - Add new utility to the repo in the `./src/utils/` directory.
+###### - Update our ```README``` with your transaction and link to the dependent library if you did not add it to `./src/transactions/`.
 
 
 ---
 <a name="txlist"><h4>Transaction List</h4></a>
 |Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
 | --- | --- | --- | --- | --- | --- | --- |
-|delegationTx | Pool ID: string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
+|delegationTx | Pool ID (hex): string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
 
 ---
 **Ways to support:**
