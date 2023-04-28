@@ -34,7 +34,7 @@ https://laravel-mix.com/docs/6.0/quick-webpack-configuration
 ###### import & invoke transaction
 ```jsx
 // app.jsx
-import delegationTx from "@dotare/cardano-transactions"
+import { delegationTx } from "@dotare/cardano-transactions"
 
 <button onClick={() => { delegationTx('5653f2a1aea5318f43a63e0148076348a475d3c89283a8c1eb498fb7', 'eternl', 0) }}>eternl</button>
 ```
@@ -45,6 +45,7 @@ import delegationTx from "@dotare/cardano-transactions"
 <a name="howtoadd"><h4>How to contribute</h4><a>
 ###### *Pull Requests:* 
 ###### - Add new transactions to the repo in our `./src/transactions/` directory.
+###### - Add new utility to the repo in our `./src/utils/` directory.
 ###### - Update our ```README``` with your transaction and link to the dependent library if you did not add it to the `./src/transactions/`.
 
 
