@@ -2,7 +2,7 @@
   "name": "@dotare/cardano-transactions",
   "version": "0.0.3",
   "description": "An open source library for developers to utilize CIP-30 & dcSpark's browser serialization to create reusable transactions on the Cardano Blockchain.",
-  "main": "dist/index.js",
+  "main": "dist/bundle.js",
   "types": "dist/",
   "files": [
     "dist"
@@ -37,6 +37,6 @@
     "webpack-cli": "^5.0.2"
   },
   "dependencies": {
-    "@dotare/cardano-delegation": "^0.2.6"
+    "@dotare/cardano-delegation": "^0.2.7"
   }
 }
