@@ -53,7 +53,7 @@ import { delegationTx } from "@dotare/cardano-transactions"
 <a name="txlist"><h4>Transaction List</h4></a>
 |Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
 | --- | --- | --- | --- | --- | --- | --- |
-|delegationTx | Pool ID (hex): string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
+|delegationTx | Pool ID (hex):<br/> string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
 
 ---
 **Ways to support:**
