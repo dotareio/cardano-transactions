@@ -1,6 +1,6 @@
 {
   "name": "@dotare/cardano-transactions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An open source library containing client side transactions written by the community utilizing cip30 and dcspark serialization.",
   "main": "dist/index.js",
   "types": "dist/",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/dotareio/cardano-transactions.git"
   },
-    "keywords": [
+  "keywords": [
     "cip30",
     "cardano",
     "browser",
