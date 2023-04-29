@@ -4,12 +4,31 @@
   "description": "An open source library containing client side transactions written by the community utilizing cip30 and dcspark serialization.",
   "main": "dist/index.js",
   "types": "dist/",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build-dev": "webpack --mode development && tsc",
     "test": "echo \"Error: no test specified\" && exit 0",
     "build-prod": "webpack --mode production && tsc"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotareio/cardano-transactions.git"
+  },
+    "keywords": [
+    "cip30",
+    "cardano",
+    "browser",
+    "wallet",
+    "reusable",
+    "transactions"
+  ],
+  "author": "Dotare",
+  "bugs": {
+    "url": "https://github.com/dotareio/cardano-transactions/issues"
+  },
+  "homepage": "https://www.dotare.io",
   "license": "MIT",
   "devDependencies": {
     "ts-loader": "^9.4.2",
