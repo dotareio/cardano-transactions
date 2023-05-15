@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import { newTxBuild, connectWallet, signTx, getStakeActivity, getLatestBlock } from "../utils";
 
 /**
- * example of a delegation transaction using dcspark serialization with some helper methods under the hood
+ * example of a token minting transaction using dcspark serialization with some helper methods under the hood
  * 
  * @param stakePoolId 
  * @param walletName 
