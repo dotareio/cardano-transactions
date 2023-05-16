@@ -1,6 +1,6 @@
 import { Cardano } from "@dotare/cardano-delegation";
 import { Buffer } from "buffer";
-import { newTxBuild, connectWallet, signTx, getLatestBlock } from "../utils";
+import { newTxBuild, connectWallet, signTx, getLatestBlock, getFeeParams } from "../utils";
 
 /**
  * example of a delegation transaction using dcspark serialization with some helper methods under the hood
@@ -35,24 +35,20 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
       ).payment_key()
     )
 
-    const assetNameHex = Buffer.from(assetName).toString('hex');
+    const plutusScriptWitness = CardanoWasm.PlutusScriptWitness.from_script(CardanoWasm.PlutusScript.from_v2(CardanoWasm.PlutusV2Script.from_bytes(Buffer.from("5830582e010000323222320053333573466e1cd55ce9baa0024800080148c98c8014cd5ce249035054310000500349848005", 'hex'))))
 
-    const plutusScriptWitness = CardanoWasm.PlutusScriptWitness.from_script(CardanoWasm.PlutusScript.from_v2(CardanoWasm.PlutusV2Script.new(Buffer.from("5830582e010000323222320053333573466e1cd55ce9baa0024800080148c98c8014cd5ce249035054310000500349848005", 'hex'))))
-
-    txBuilder.add_required_signer(CardanoWasm.Ed25519KeyHash.from_bytes(
-      Buffer.from(rewardAddress.slice(2), "hex")
-    ))
+    console.log(plutusScriptWitness.hash().to_hex())
 
     txBuilder.add_mint(
       CardanoWasm.SingleMintBuilder.new(
-        CardanoWasm.MintAssets.new_from_entry(CardanoWasm.AssetName.new(Buffer.from(assetNameHex, 'hex')), CardanoWasm.Int.new(CardanoWasm.BigNum.from_str(amount.toString())))
+        CardanoWasm.MintAssets.new_from_entry(CardanoWasm.AssetName.new(Buffer.from(assetName)), CardanoWasm.Int.new(CardanoWasm.BigNum.from_str(amount.toString())))
       )
         .plutus_script(
           CardanoWasm.PartialPlutusWitness.new(
             plutusScriptWitness,
-            CardanoWasm.PlutusData.new_map(CardanoWasm.PlutusMap.new())
+            CardanoWasm.PlutusData.new_constr_plutus_data(CardanoWasm.ConstrPlutusData.new(CardanoWasm.BigNum.zero(), CardanoWasm.PlutusList.new()))
           ),
-          txBuilder.required_signers()
+          CardanoWasm.Ed25519KeyHashes.new()
         )
     )
 
@@ -60,7 +56,45 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     txBuilder.set_ttl(CardanoWasm.BigNum.from_str((latestSlot + 500).toString()
     ));
 
-    const signedTx = await signTx(txBuilder, CardanoWasm, paymentAddress, Wallet);
+    const {
+      min_fee_a, min_fee_b, key_deposit, pool_deposit, max_tx_size, max_val_size, price_mem, price_step, coins_per_utxo_word, collateral_percent, max_collateral_inputs,
+    } = await getFeeParams(networkId);
+
+    const redeemerTag = CardanoWasm.RedeemerTag.new_mint();
+    const zero = CardanoWasm.BigNum.zero();
+    const data = CardanoWasm.PlutusData.new_constr_plutus_data(CardanoWasm.ConstrPlutusData.new(zero, CardanoWasm.PlutusList.new()));
+    const exUnits = CardanoWasm.ExUnits.new(CardanoWasm.BigNum.from_str((price_mem * 10000).toString()), CardanoWasm.BigNum.from_str((price_step * 10000000).toString()))
+
+    const TxRedeemerBuilder = txBuilder.build_for_evaluation(0, CardanoWasm.Address.from_bech32(paymentAddress))
+
+    console.log(TxRedeemerBuilder);
+
+    TxRedeemerBuilder.set_exunits(
+      CardanoWasm.RedeemerWitnessKey.new(
+        CardanoWasm.RedeemerTag.new_mint(),
+        CardanoWasm.BigNum.zero()
+      ),
+      exUnits
+    )
+
+    const transaction = await TxRedeemerBuilder.draft_tx()
+
+    const witness = await Wallet.signTx(
+      Buffer.from(transaction.to_bytes(), "hex").toString("hex"),
+      false
+    );
+
+    const transactionWitnessSet = CardanoWasm.TransactionWitnessSet.from_bytes(Buffer.from(witness, 'hex'))
+
+    transactionWitnessSet.set_plutus_data(
+      CardanoWasm.PlutusList.new()
+    )
+
+    const signedTx = CardanoWasm.Transaction.new(
+      transaction.body(),
+      transactionWitnessSet,
+      undefined
+    );
 
     const txHash = await Wallet.submitTx(
       Buffer.from(signedTx.to_bytes()).toString("hex")
@@ -75,6 +109,7 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     };
     return ([txHash, paymentAddress]);
   } catch (error) {
+    console.log(error);
     switch (error.message) {
       case "Cannot read properties of null (reading 'location')":
         alert('New tab was blocked from opening, look for pop-up blocked notification to see link.');
