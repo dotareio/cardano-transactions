@@ -18,7 +18,6 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
 
     const Wallet = await connectWallet(walletName); // connect to browser wallet
     const usedAddresses: string[] = await Wallet.getUsedAddresses();
-    const rewardAddress: string = await Wallet.getRewardAddresses().then((x) => x[0]);
     const paymentAddress = CardanoWasm.BaseAddress.from_address(
       CardanoWasm.Address.from_bytes(Buffer.from(usedAddresses[0], "hex"))
     )
@@ -35,18 +34,31 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
       ).payment_key()
     )
 
-    const plutusScriptWitness = CardanoWasm.PlutusScriptWitness.from_script(CardanoWasm.PlutusScript.from_v2(CardanoWasm.PlutusV2Script.from_bytes(Buffer.from("5830582e010000323222320053333573466e1cd55ce9baa0024800080148c98c8014cd5ce249035054310000500349848005", 'hex'))))
+    const plutusScriptWitness = CardanoWasm.PlutusScriptWitness.from_script(
+      CardanoWasm.PlutusScript.from_v2(
+        CardanoWasm.PlutusV2Script.from_bytes(
+          Buffer.from("5830582e010000323222320053333573466e1cd55ce9baa0024800080148c98c8014cd5ce249035054310000500349848005", 'hex')
+        )
+      )
+    )
 
     console.log(plutusScriptWitness.hash().to_hex())
 
     txBuilder.add_mint(
       CardanoWasm.SingleMintBuilder.new(
-        CardanoWasm.MintAssets.new_from_entry(CardanoWasm.AssetName.new(Buffer.from(assetName)), CardanoWasm.Int.new(CardanoWasm.BigNum.from_str(amount.toString())))
+        CardanoWasm.MintAssets.new_from_entry(
+          CardanoWasm.AssetName.new(Buffer.from(assetName)), 
+          CardanoWasm.Int.new(CardanoWasm.BigNum.from_str(amount.toString()))
+        )
       )
         .plutus_script(
           CardanoWasm.PartialPlutusWitness.new(
             plutusScriptWitness,
-            CardanoWasm.PlutusData.new_constr_plutus_data(CardanoWasm.ConstrPlutusData.new(CardanoWasm.BigNum.zero(), CardanoWasm.PlutusList.new()))
+            CardanoWasm.PlutusData.new_constr_plutus_data(
+              CardanoWasm.ConstrPlutusData.new(
+                CardanoWasm.BigNum.zero(), CardanoWasm.PlutusList.new()
+              )
+            )
           ),
           CardanoWasm.Ed25519KeyHashes.new()
         )
@@ -57,13 +69,14 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     ));
 
     const {
-      min_fee_a, min_fee_b, key_deposit, pool_deposit, max_tx_size, max_val_size, price_mem, price_step, coins_per_utxo_word, collateral_percent, max_collateral_inputs,
+      price_mem,
+      price_step
     } = await getFeeParams(networkId);
 
-    const redeemerTag = CardanoWasm.RedeemerTag.new_mint();
-    const zero = CardanoWasm.BigNum.zero();
-    const data = CardanoWasm.PlutusData.new_constr_plutus_data(CardanoWasm.ConstrPlutusData.new(zero, CardanoWasm.PlutusList.new()));
-    const exUnits = CardanoWasm.ExUnits.new(CardanoWasm.BigNum.from_str((price_mem * 10000).toString()), CardanoWasm.BigNum.from_str((price_step * 10000000).toString()))
+    const exUnits = CardanoWasm.ExUnits.new(
+      CardanoWasm.BigNum.from_str((price_mem * 10000).toString()), 
+      CardanoWasm.BigNum.from_str((price_step * 10000000).toString())
+    )
 
     const TxRedeemerBuilder = txBuilder.build_for_evaluation(0, CardanoWasm.Address.from_bech32(paymentAddress))
 
