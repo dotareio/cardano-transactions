@@ -1,1 +1,1 @@
-export { newTxBuild, connectWallet, signTx, getFeeParams, getStakeActivity, getLatestBlock} from './utils'
+export { newTxBuild, connectWallet, signTx, getFeeParams, getStakeActivity, getLatestBlock, getExUnitEval} from './utils'

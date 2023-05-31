@@ -91,4 +91,21 @@ export async function signTx(txBuilder: any, CardanoWasm: any, address: any, Wal
   return signedTx;
 }
 
-export { getFeeParams, getStakeActivity, getLatestBlock }
+export async function getExUnitEval(draftTx, network: string | number) {
+  const ExunitEval = await fetch(`https://api.dotare.io/getExUnitEval/${network}`,
+    {
+      mode: "cors",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: Buffer.from(draftTx.to_bytes()).toString("hex")
+    }
+  );
+  console.log("exuniteval: ", Buffer.from(draftTx.to_bytes()).toString("hex"));
+  
+  return ExunitEval.json();
+}
+
+
+export { getFeeParams, getStakeActivity, getLatestBlock } 
