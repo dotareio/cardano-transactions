@@ -102,8 +102,6 @@ export async function getExUnitEval(draftTx, network: string | number) {
       body: Buffer.from(draftTx.to_bytes()).toString("hex")
     }
   );
-  console.log("exuniteval: ", Buffer.from(draftTx.to_bytes()).toString("hex"));
-  
   return ExunitEval.json();
 }
 

@@ -4,7 +4,8 @@ import { Buffer } from "buffer";
 import { newTxBuild, connectWallet, signTx, getLatestBlock, getFeeParams, getExUnitEval } from "../utils";
 
 /**
- * example of a delegation transaction using dcspark serialization with some helper methods under the hood
+ * example of a mintFreeToken transaction using dcspark serialization with some helper methods under the hood.
+ * PolicyID is from Plutus Pioneer Program Iteration 4 Week 5
  * 
  * @param assetName 
  * @param amount 
@@ -29,7 +30,6 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
 
     utxos.forEach(utx => {
       const utxo = CardanoWasm.TransactionUnspentOutput.from_bytes(Buffer.from(utx, 'hex'))
-      console.log(utxo.output().to_js_value().amount.coin);
       const lovelace = utxo.output().to_js_value().amount.coin
       if (3000000 <= lovelace && lovelace <= 6000000) utxoCollateral = utxo; 
       txBuilder.add_utxo(
@@ -39,8 +39,8 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
       )
     });
 
-    const collaterals = await Wallet.experimental.getCollateral();
-    const collateral = collaterals.length >= 1 ? 
+    const collaterals = await Wallet.experimental?.getCollateral();
+    const collateral = collaterals?.length >= 1 ? 
       CardanoWasm.TransactionUnspentOutput.from_bytes(Buffer.from(collaterals[0], "hex"))
       : utxoCollateral;
     if (!collateral) throw new Error(`No collateral set. Please set collateral in your ${walletName} wallet.`);
@@ -99,10 +99,8 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     txBuilder.select_utxos();
     const redeemerTxBuilder = txBuilder.build_for_evaluation(0, CardanoWasm.Address.from_bech32(paymentAddress))
     const draftTx = redeemerTxBuilder.draft_tx();
-    console.log(Buffer.from(draftTx.to_bytes()).toString("hex"));
     
     const evalResults = await getExUnitEval(draftTx, networkId)
-    console.log(evalResults, evalResults.result);
     const evalExUnits = evalResults.result.EvaluationResult['mint:0']
     const exUnits = CardanoWasm.ExUnits.new(
       CardanoWasm.BigNum.from_str(evalExUnits.memory.toString()),
@@ -122,33 +120,16 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
 
     Languages.add(CardanoWasm.Language.new_plutus_v2())
 
-    const constrPlutus = CardanoWasm.PlutusData.new_list(
-      CardanoWasm.PlutusList.new()
-    )
-    const datahash = CardanoWasm.hash_plutus_data(constrPlutus)
-    console.log("datahash: ", datahash.to_hex());
-
-    const policyHash = CardanoWasm.ScriptHash.from_hex("79dc2cb93b706af32fe1ef3b3fb014b98ef83be6b5c1a0c6e9aa8f83")
-
-    console.log(policyHash.to_hex());
-
     const scriptDataHash = CardanoWasm.hash_script_data(
       Redeemers,
       Costmdls,
       undefined
     )
 
-    console.log(txBuilder.get_total_input().to_js_value());
-
-    console.log(draftTx.to_js_value());
-    
-
     const signedTxBuilder = txBuilder.build(0, CardanoWasm.Address.from_bech32(paymentAddress));
-    const addSDH = draftTx.body();
+    const draftTxBody = draftTx.body();
 
-    addSDH.set_script_data_hash(scriptDataHash);
-
-    console.log(addSDH.to_js_value(), "signedTx: ", signedTxBuilder.body().to_js_value())
+    draftTxBody.set_script_data_hash(scriptDataHash);
 
     const witnessSet = signedTxBuilder.witness_set()
     witnessSet.add_redeemers(
@@ -157,11 +138,9 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
 
     const builtwitnessset = witnessSet.build()
     const transaction = CardanoWasm.Transaction.new(
-      addSDH,
+      draftTxBody,
       builtwitnessset
     );
-
-    console.log("transaction: ", transaction.to_js_value());
 
     const witness = await Wallet.signTx(
       Buffer.from(transaction.to_bytes(), "hex").toString("hex"),
@@ -203,7 +182,6 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     };
     return ([txHash, paymentAddress]);
   } catch (error) {
-    console.log(error);
     switch (error.message) {
       case "Cannot read properties of null (reading 'location')":
         alert('New tab was blocked from opening, look for pop-up blocked notification to see link.');
