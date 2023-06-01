@@ -37,6 +37,7 @@ https://laravel-mix.com/docs/6.0/quick-webpack-configuration
 import { delegationTx } from "@dotare/cardano-transactions"
 
 <button onClick={() => { delegationTx('5653f2a1aea5318f43a63e0148076348a475d3c89283a8c1eb498fb7', 'eternl', 0) }}>eternl</button>
+<button onClick={() => { mintFreeTokenTx('Dotare', 1694, 'eternl', 0) }}>eternl</button>
 ```
 ##### Every transaction may have it's own unique parameters to customize the user experience as well as selecting the on-chain network and light wallet.
 *Be sure to look at the parameters in the [Transaction List](#txlist)*
@@ -53,8 +54,8 @@ import { delegationTx } from "@dotare/cardano-transactions"
 <a name="txlist"><h4>Transaction List</h4></a>
 |Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
 | --- | --- | --- | --- | --- | --- | --- |
-|delegationTx | Pool ID (hex):<br/> string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
-|mintFreeTokenTx | AssetName: string, <br/> Amount: uint,  WalletName: string,<br/> NetworkId: int | An always true minting method | [./src/transactions/mintFreeTokenTx.ts](./src/transactions/mintFreeTokenTx.ts) <br /> Do not make tokens you are serious about with this policy anyone can make the same token with the same asset name.| DoubleThirty | No | 0% |
+|delegationTx | Pool ID (hex):<br/> string,<br/> WalletName: string,<br/> NetworkId: string \| int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
+|mintFreeTokenTx | AssetName: string, <br/> Amount: uint,  WalletName: string,<br/> NetworkId: string \| int | An always true minting method | [./src/transactions/mintFreeTokenTx.ts](./src/transactions/mintFreeTokenTx.ts) <br /> Do not make tokens you are serious about with this policy anyone can make the same token with the same asset name.| DoubleThirty | No | 0% |
 
 ---
 **Ways to support:**
