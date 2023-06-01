@@ -54,6 +54,7 @@ import { delegationTx } from "@dotare/cardano-transactions"
 |Tx Name | Params | Description | Source Code | Author | Includes TxFee | Fee |
 | --- | --- | --- | --- | --- | --- | --- |
 |delegationTx | Pool ID (hex):<br/> string,<br/> WalletName: string,<br/> NetworkId: int | A delegation method | https://github.com/dotareio/cardano-delegation/blob/main/src/delegation.ts<br/> a modified version using this package's helper methods is under ./src/transactions/ | DoubleThirty | No | 0% |
+|mintFreeTokenTx | AssetName: string, <br/> Amount: uint,  WalletName: string,<br/> NetworkId: int | An always true minting method | [./src/transactions/mintFreeTokenTx.ts](./src/transactions/mintFreeTokenTx.ts) <br /> Do not make tokens you are serious about with this policy anyone can make the same token with the same asset name.| DoubleThirty | No | 0% |
 
 ---
 **Ways to support:**

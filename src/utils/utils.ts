@@ -1,4 +1,4 @@
-import {getFeeParams, getStakeActivity, getLatestBlock} from "@dotare/cardano-delegation";
+import { getFeeParams, getStakeActivity, getLatestBlock } from "@dotare/cardano-delegation";
 import { Buffer } from "buffer";
 import { WalletApi } from "../types/global";
 
@@ -9,11 +9,17 @@ import { WalletApi } from "../types/global";
  * @param network 
  * @returns TransactionBuilderConfigBuilder
  */
-export async function newTxBuild(network: string|number, CardanoWasm: any) {
-
+export async function newTxBuild(network: string | number, CardanoWasm: any) {
   const {
-    min_fee_a, min_fee_b, key_deposit, pool_deposit, max_tx_size, max_val_size, price_mem, price_step, coins_per_utxo_word, collateral_percent, max_collateral_inputs,
+    min_fee_a, min_fee_b, key_deposit, pool_deposit, max_tx_size, max_val_size, price_mem, price_step, coins_per_utxo_word, collateral_percent, max_collateral_inputs, cost_models
   } = await getFeeParams(network);
+  const JsonCostModel = {
+    language: "PlutusV2",
+    op_costs: Object.values(cost_models.PlutusV2).map(e => e.toString())
+  }
+  const costModel = CardanoWasm.CostModel.from_json(JSON.stringify(JsonCostModel));
+  const costmdls = CardanoWasm.Costmdls.new()
+  costmdls.insert(costModel)
 
   const txBuilderConfig = CardanoWasm.TransactionBuilderConfigBuilder.new()
     .coins_per_utxo_byte(CardanoWasm.BigNum.from_str(coins_per_utxo_word))
@@ -31,6 +37,7 @@ export async function newTxBuild(network: string|number, CardanoWasm: any) {
     .prefer_pure_change(true)
     .collateral_percentage(Number(collateral_percent))
     .max_collateral_inputs(max_collateral_inputs)
+    .costmdls(costmdls)
     .build();
 
   const txBuilder = CardanoWasm.TransactionBuilder.new(txBuilderConfig);
@@ -44,14 +51,14 @@ export async function newTxBuild(network: string|number, CardanoWasm: any) {
  * @returns WalletApi
  */
 export async function connectWallet(walletName: string) {
-    if (!window.cardano?.[walletName]) {
-      throw new Error(
-        "Unable to connect to selected Wallet please make sure that you have the Wallet's browser extension."
-      );
-    }
-    const Wallet = await window.cardano[walletName].enable();
-    if (await window.cardano[walletName].isEnabled()) return Wallet;
+  if (!window.cardano?.[walletName]) {
+    throw new Error(
+      "Unable to connect to selected Wallet please make sure that you have the Wallet's browser extension."
+    );
   }
+  const Wallet = await window.cardano[walletName].enable();
+  if (await window.cardano[walletName].isEnabled()) return Wallet;
+}
 
 
 /**
@@ -84,4 +91,19 @@ export async function signTx(txBuilder: any, CardanoWasm: any, address: any, Wal
   return signedTx;
 }
 
-export { getFeeParams, getStakeActivity, getLatestBlock}
+export async function getExUnitEval(draftTx, network: string | number) {
+  const ExunitEval = await fetch(`https://api.dotare.io/getExUnitEval/${network}`,
+    {
+      mode: "cors",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: Buffer.from(draftTx.to_bytes()).toString("hex")
+    }
+  );
+  return ExunitEval.json();
+}
+
+
+export { getFeeParams, getStakeActivity, getLatestBlock } 
