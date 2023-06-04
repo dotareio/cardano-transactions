@@ -1,4 +1,4 @@
-<h4 align="center">An open source library for developers to utilize CIP-30 & dcSpark's browser serialization to create reusable transactions on the Cardano Blockchain.</h4>
+<h4 align="center">An open source library for developers to utilize CIP-30 & dcSpark's browser serialization to create reusable transactions on Cardano.</h4>
 <p align="center"><a href="https://blockfrost.io/"><img src="https://github.com/dotareio/public/blob/main/blockfrost.svg" width="110"></a><img src="https://img.shields.io/badge/Preview-Up-brightgreen"> <img src="https://img.shields.io/badge/Pre--Production-Up-brightgreen"> <img src="https://img.shields.io/badge/Mainnet-Up-brightgreen">
 </p>
 
@@ -37,7 +37,7 @@ https://laravel-mix.com/docs/6.0/quick-webpack-configuration
 import { delegationTx } from "@dotare/cardano-transactions"
 
 <button onClick={() => { delegationTx('5653f2a1aea5318f43a63e0148076348a475d3c89283a8c1eb498fb7', 'eternl', 0) }}>eternl</button>
-<button onClick={() => { mintFreeTokenTx('Dotare', 1694, 'flint', 0) }}>flint</button>
+<button onClick={() => { mintFreeTokenTx('Dotare', 1694, 'flint', 1) }}>flint</button>
 ```
 ##### Every transaction may have it's own unique parameters to customize the user experience as well as selecting the on-chain network and light wallet.
 *Be sure to look at the parameters in the [Transaction List](#txlist)*
