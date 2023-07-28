@@ -129,6 +129,7 @@ export async function mintFreeTokenTx(assetName: string, amount: number, walletN
     const signedTxBuilder = txBuilder.build(0, CardanoWasm.Address.from_bech32(paymentAddress));
     const draftTxBody = draftTx.body();
 
+    console.log(txBuilder.get_mint().to_js_value());
     draftTxBody.set_script_data_hash(scriptDataHash);
 
     const witnessSet = signedTxBuilder.witness_set()
